@@ -12,17 +12,28 @@ import com.rakbank.ems.web.rest.response.GenericObjectResponse;
 import com.rakbank.ems.web.rest.response.ResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
+import java.text.ParseException;
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/api/v1/employee")
 public class EmployeeController {
 
     @Autowired
     private EmployeeService employeeService ;
+
+    @GetMapping("/search/{searchType}/{searchTerm}")
+    public ResponseEntity<GenericObjectResponse<EmployeeResponseDTO>> getSearchList(@PathVariable String searchType, @PathVariable String searchTerm) throws NoRecordsFoundException, EntityNotFoundException, ParseException {
+        if(searchType.equals("empNo")){
+            return ResponseEntity.ok(new GenericObjectResponse<>(employeeService.getEntityByEmployeeNo(Long.parseLong(searchTerm)),new ResponseObject("",""))) ;
+        }else if(searchType.equals("empName")){
+            return ResponseEntity.ok(new GenericObjectResponse<>(employeeService.getEntityByEmployeeName(searchTerm),new ResponseObject("",""))) ;
+        }else{
+            return ResponseEntity.ok(new GenericObjectResponse<>(null,new ResponseObject("",""))) ;
+        }
+    }
 
     @GetMapping("/list")
     public ResponseEntity<GenericListResponse<EmployeeResponseDTO>> getEntityList() throws NoRecordsFoundException {
@@ -38,9 +49,9 @@ public class EmployeeController {
         }
     }
 
-    @GetMapping("/{employeeNo}")
-    public ResponseEntity<GenericObjectResponse<EmployeeResponseDTO>> getEntityByCode(@PathVariable Long employeeNo) throws EntityNotFoundException {
-        return ResponseEntity.ok(new GenericObjectResponse<>(employeeService.getEntityByEmployeeNo(employeeNo),new ResponseObject("",""))) ;
+    @GetMapping("/{id}")
+    public ResponseEntity<GenericObjectResponse<EmployeeResponseDTO>> getEntityById(@PathVariable String id) throws EntityNotFoundException {
+        return ResponseEntity.ok(new GenericObjectResponse<>(employeeService.getEntityById(id),new ResponseObject("",""))) ;
     }
 
     @PostMapping

@@ -68,7 +68,7 @@ public class BaseExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException exception, HttpHeaders headers, HttpStatus status, WebRequest request) {
         String errorCode = "ValidationError" ;
-        String errorMessage = exception.getFieldError().getDefaultMessage() ;
+        String errorMessage = exception.getLocalizedMessage() ;
         logger.error("MethodArgumentNotValidException: " + errorMessage, exception) ;
         ResponseObject responseObject = new ResponseObject(errorCode,errorMessage) ;
         GenericObjectResponse finalResponse = new GenericObjectResponse(null,responseObject);

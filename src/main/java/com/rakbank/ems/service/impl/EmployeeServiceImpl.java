@@ -12,6 +12,8 @@ import com.rakbank.ems.web.rest.error.EntityNotUpdatedException;
 import com.rakbank.ems.web.rest.error.NoRecordsFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -74,8 +76,18 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public EmployeeResponseDTO getEntityByEmployeeNo(Long employeeNo) throws EntityNotFoundException {
+    public EmployeeResponseDTO getEntityByEmployeeNo(Long employeeNo) throws EntityNotFoundException, ParseException {
         Optional<Employee> optionalEmp = employeeRepository.findByEmployeeNo(employeeNo) ;
+        if(optionalEmp.isEmpty()){
+            throw new EntityNotFoundException("ERR_EMP_NOT_FOUND");
+        }else{
+            return EmployeeMapper.toDTO(optionalEmp.get()) ;
+        }
+    }
+
+    @Override
+    public EmployeeResponseDTO getEntityByEmployeeName(String employeeName) throws EntityNotFoundException, ParseException {
+        Optional<Employee> optionalEmp = employeeRepository.findByEmployeeNameContains(employeeName) ;
         if(optionalEmp.isEmpty()){
             throw new EntityNotFoundException("ERR_EMP_NOT_FOUND");
         }else{

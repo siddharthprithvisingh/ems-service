@@ -13,16 +13,16 @@ import java.util.Date;
 @NoArgsConstructor
 public class Employee extends BaseEntity{
 
-    @Column(name="employee_no",unique=true, nullable=false)
+    @Column(name="employee_no",unique=true, nullable=false, length = 10)
     private Long employeeNo ;
 
-    @Column(name="employee_name", nullable=false)
+    @Column(name="employee_name", nullable=false, length=100)
     private String employeeName ;
 
     @Column(name="date_of_joining", nullable=false)
     private Date dateOfJoining ;
 
-    @Column(name="department_code", nullable=false)
+    @Column(name="department_code", nullable=false, length = 2)
     private String departmentCode ;
 
     @Column(name="salary", nullable=false)
